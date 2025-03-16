@@ -34,6 +34,12 @@ app.put('/books/:id', (req, res) => {
     res.status(202).json(book)
 })
 
+app.delete('/books/:id', (req, res) => {
+    let book = books.find((book) => book.id === Number(req.params.id))
+    books.splice(books.indexOf(book), 1)
+
+    res.status(202).send('Deleted book with success')
+})
 
 app.post('/books', (req, res) => {
     books.push(req.body)
