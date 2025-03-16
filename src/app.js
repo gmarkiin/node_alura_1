@@ -1,25 +1,26 @@
 import express from "express"
+import connectOnDbConnect from "./config/dbConnect.js"
+import book from "./models/Book.js";
+
+const connection = await connectOnDbConnect()
+connection.on("error", (err) => {
+    console.error("connection error:", err)
+})
+
+connection.once("open",  () => {
+    console.log("connection opened")
+})
 
 const app = express()
 app.use(express.json())
-
-const books = [
-    {
-        id: 1,
-        title: 'Lord of Rings'
-    },
-    {
-        id: 2,
-        title: 'The Hobbit'
-    }
-]
 
 app.get('/', (req, res) => {
     res.status(200).send('Welcome to Aurora!')
 })
 
-app.get('/books', (req, res) => {
-    res.status(200).json(books)
+app.get('/books', async (req, res) => {
+    const booksList = await book.find({})
+    res.status(200).json(booksList)
 })
 
 app.get('/books/:id', (req, res) => {
